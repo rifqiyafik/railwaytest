@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Asal_Sekolah extends Model
 {
     // use HasFactory;
-    protected $fillable = ['nama_sekolah','alamat_sekolah'];
+    protected $table = 'asal_sekolahs';
+    protected $fillable = ['nama_sekolah', 'alamat_sekolah'];
 
-    public function siswa(){
-        return $this->hasMany(Siswa::class, 'sekolah_id' ,  'id' );
+    public function siswa()
+    {
+        return $this->hasMany(Siswa::class, 'sekolah_id',  'id');
     }
-
 }

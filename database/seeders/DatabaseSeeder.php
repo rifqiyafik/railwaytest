@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Faker\Factory as Faker;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,66 +15,118 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
-        // \App\Models\User::factory(10)->create();
-
+        /*
+        |--------------------------------------------------------------------------
+        | Admin Default
+        |--------------------------------------------------------------------------
+        */
         \App\Models\User::factory()->create([
             'name' => 'Administrator',
             'email' => 'ptpn4@gmail.com',
             'password' => Hash::make('medan123'),
         ]);
 
-        // Seeder untuk tabel sekolahs
-        // $schools = [
-        //     ['name' => 'SMK N 1 Medan'],
-        //     ['name' => 'SMK N 12 Medan'],
-        //     ['name' => 'SMK N 2 Medan'],
-        //     ['name' => 'SMK N 3 Medan'],
-        //     ['name' => 'SMK N 9 Medan'],
-        // ];
+        /*
+        |--------------------------------------------------------------------------
+        | Seeder Asal Sekolah
+        |--------------------------------------------------------------------------
+        */
+        $schools = [
+            [
+                'nama_sekolah'   => 'SMK Negeri 1 Medan',
+                'alamat_sekolah' => 'Jl. Cik Ditiro No. 19, Medan'
+            ],
+            [
+                'nama_sekolah'   => 'SMK Negeri 12 Medan',
+                'alamat_sekolah' => 'Jl. Pancing I, Medan Estate'
+            ],
+            [
+                'nama_sekolah'   => 'SMK Negeri 2 Medan',
+                'alamat_sekolah' => 'Jl. Gelas No. 30, Medan'
+            ],
+            [
+                'nama_sekolah'   => 'Universitas Muhammadiyah Sumatera Utara (UMSU)',
+                'alamat_sekolah' => 'Jl. Muchtar Basri No. 3, Medan'
+            ],
+            [
+                'nama_sekolah'   => 'Universitas Sumatera Utara (USU)',
+                'alamat_sekolah' => 'Jl. Dr. Mansyur No. 5, Medan'
+            ],
+        ];
 
-        // foreach ($schools as $school) {
-        //     DB::table('sekolahs')->insert(array_merge($school, [
-        //         'created_at' => Carbon::now(),
-        //         'updated_at' => Carbon::now(),
-        //     ]));
-        // }
+        DB::table('asal_sekolahs')->truncate();
+        DB::table('asal_sekolahs')->insert($schools);
 
-        // // Seeder untuk tabel penempatans
-        // $placements = [
-        //     ['name' => 'Gedung Akuntansi'],
-        //     ['name' => 'Kantor'],
-        //     ['name' => 'Umum'],
-        //     ['name' => 'Utama'],
-        // ];
+        /*
+        |--------------------------------------------------------------------------
+        | Seeder Penempatan
+        |--------------------------------------------------------------------------
+        */
+        $placements = [
+            ['name' => 'Bagian Pengadaan dan Teknologi Informasi'],
+            ['name' => 'Bagian Tanaman'],
+            ['name' => 'Bagian Pengolahan/Pabrik'],
+            ['name' => 'Bagian Akuntansi & Keuangan'],
+            ['name' => 'Bagian Sumber Daya Manusia (SDM) & Umum'],
+            ['name' => 'Bagian Teknik/Enjiniring'],
+            ['name' => 'Bagian Pemasaran & Logistik'],
+            ['name' => 'Satuan Pengawasan Intern (SPI) Regional'],
+            ['name' => 'Unit Usaha/Kebun'],
+        ];
 
-        // foreach ($placements as $placement) {
-        //     DB::table('penempatans')->insert(array_merge($placement, [
-        //         'created_at' => Carbon::now(),
-        //         'updated_at' => Carbon::now(),
-        //     ]));
-        // }
+        DB::table('penempatans')->truncate();
+        DB::table('penempatans')->insert($placements);
 
-        // // Seeder untuk tabel siswas
-        // foreach ($schools as $school_id => $school) {
-        //     for ($i = 1; $i <= 5; $i++) {
-        //         DB::table('siswas')->insert([
-        //             'nama_siswa' => "Siswa $i {$school['name']}",
-        //             'id_siswa' => rand(1000, 9999),
-        //             'tmpt_lahir' => "Medan",
-        //             'tgl_lahir' => Carbon::parse('200' . rand(0, 9) . '-0' . rand(1, 9) . '-' . rand(10, 28)),
-        //             'jenis_kelamin' => (rand(0, 1) ? 'l' : 'p'),
-        //             'alamat' => "Alamat Siswa $i {$school['name']}",
-        //             'sekolah_id' => $school_id + 1,
-        //             'penempatan_id' => rand(1, count($placements)),
-        //             'tgl_masuk' => Carbon::now()->subYears(rand(1, 3)),
-        //             'tgl_keluar' => Carbon::now(),
-        //             'no_hp' => '08123456789' . rand(0, 9),
-        //             'image' => 'default.jpg',
-        //             'created_at' => Carbon::now(),
-        //             'updated_at' => Carbon::now(),
-        //         ]);
-        //     }
-        // }
+        /*
+        |--------------------------------------------------------------------------
+        | Seeder Siswa (100 Data Realistis)
+        |--------------------------------------------------------------------------
+        */
+        DB::table('siswas')->truncate();
+
+        $faker = Faker::create('id_ID');
+
+        $kecamatanMedan = [
+            'Medan Timur',
+            'Medan Tuntungan',
+            'Medan Baru',
+            'Medan Helvetia',
+            'Medan Denai',
+            'Medan Marelan',
+            'Medan Johor',
+            'Medan Kota',
+            'Medan Sunggal',
+            'Medan Amplas',
+            'Medan Labuhan'
+        ];
+
+        for ($i = 1; $i <= 1000; $i++) {
+
+            $jenisKelamin = $faker->randomElement(['l', 'p']);
+            $defaultImage = ($jenisKelamin == 'l') ? 'default.png' : 'default2.png';
+
+            $alamat = "Jl. " . $faker->streetName . " No. " . rand(1, 200)
+                . ", " . $faker->randomElement($kecamatanMedan);
+
+            DB::table('siswas')->insert([
+                'nama_siswa'    => $faker->name,
+                'id_siswa'      => rand(10000000, 99999999),
+                'tmpt_lahir'    => $faker->city,
+                'tgl_lahir'     => $faker->date('Y-m-d'),
+                'jenis_kelamin' => $jenisKelamin,
+                'alamat'        => $alamat,
+                'sekolah_id'    => rand(1, count($schools)),
+                'penempatan_id' => rand(1, count($placements)),
+                'tgl_masuk'     => $faker->dateTimeBetween('-3 months', 'now'),
+                'tgl_keluar'    => $faker->dateTimeBetween('now', '+3 months'),
+                'no_hp'         => $faker->numerify('08##########'),
+
+                //Logika default image
+                'image'         => $defaultImage,
+
+                'created_at'    => Carbon::now(),
+                'updated_at'    => Carbon::now(),
+            ]);
+        }
     }
 }

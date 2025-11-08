@@ -9,7 +9,6 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- ... Bagian-bagian head lainnya ... -->
     <link rel="icon" href="{{ asset('image/logoptpn4.png') }}" type="image/x-icon">
     <link rel="shortcut icon" href="{{ asset('image/logoptpn4.png') }}" type="image/x-icon">
 
@@ -18,14 +17,10 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Scripts -->
-
     <link rel="stylesheet" href="{{asset('build/assets/app-lhA9k1qk.css')}}">
 
-
-
-
     {{-- Icons --}}
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
     .containerr{
@@ -35,7 +30,40 @@
     .atas{
         padding-top: 120px;
     }
+    /* Mode gelap global */
+    .dark-mode {
+        background-color: #0f1914;
+        color: #ffffff;
+    }
 
+    /* Navbar dark */
+    .dark-mode .navbar {
+        background-color: #0a120f !important;
+        border-bottom: 1px solid #193529;
+    }
+    /* Saat dark mode aktif, ikon sun harus tetap terang */
+    .dark-mode #darkIcon.bi-sun-fill {
+        color: #ffd54f !important; /* kuning terang */
+    }
+
+    /* Ikon moon saat light mode */
+    #darkIcon.bi-moon-stars {
+        color: #0a120f; /* abu tenang */
+    }
+
+    .dark-mode .navbar .nav-link {
+        color: #ffffff !important;
+    }
+
+    .dark-mode .navbar-brand img {
+        filter: brightness(85%);
+    }
+
+    /* Dropdown */
+    .dark-mode .dropdown-menu {
+        background-color: #0f1914;
+        border-color: #193529;
+    }
     </style>
 </head>
 <body>
@@ -74,6 +102,11 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 </li>
+                                <li class="nav-item d-flex align-items-center ms-3">
+                                <button id="darkModeToggle" class="btn ">
+                                    <i id="darkIcon" class="bi"></i>
+                                </button>
+                            </li>
                             @endif
 
                             @if (Route::has('register'))
@@ -102,7 +135,12 @@
                                     </form>
                                 </div>
                             </li>
-                        @endguest
+                            <li class="nav-item d-flex align-items-center ms-3">
+                                <button id="darkModeToggle" class="btn ">
+                                    <i id="darkIcon" class="bi"></i>
+                                </button>
+                            </li>
+                            @endguest
                     </ul>
                 </div>
             </div>
@@ -123,5 +161,31 @@
         </div>
     </footer>
 </body>
+<script>
+    const btn = document.getElementById('darkModeToggle');
+    const icon = document.getElementById('darkIcon');
 
+    function applyMode() {
+        const darkEnabled = localStorage.getItem('dark-mode') === 'enabled';
+
+        if (darkEnabled) {
+            document.body.classList.add('dark-mode');
+            icon.className = "bi bi-sun-fill"; // ikon terang
+        } else {
+            document.body.classList.remove('dark-mode');
+            icon.className = "bi bi-moon-stars-fill"; // ikon gelap
+        }
+    }
+
+    applyMode();
+
+    btn.addEventListener('click', () => {
+        if (document.body.classList.contains('dark-mode')) {
+            localStorage.setItem('dark-mode', 'disabled');
+        } else {
+            localStorage.setItem('dark-mode', 'enabled');
+        }
+        applyMode();
+    });
+</script>
 </html>

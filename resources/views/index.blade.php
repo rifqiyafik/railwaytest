@@ -8,8 +8,8 @@
 
         @foreach($penempatans->sortBy('name') as $penempatan)
 
-        <div class="col-md-12">
-          <h2 style="color:rgb(45, 149, 150); margin-top: 20px;">{{$penempatan->name}}</h2>
+        <div class="col-md-12 pb-5">
+          <h1 style="color:#2E7D32; margin-top: 20px;">{{$penempatan->name}}</h1>
 
           @foreach($penempatan->siswas->groupBy('sekolah_id') as $sekolahId => $siswas)
           @php
@@ -17,12 +17,12 @@
           @endphp
           @if($sekolah)
           <div class="col-md-12">
-            <h4 style="color: rgb(17, 106, 108); margin-top: 20px;">{{$sekolah->nama_sekolah}}</h4>
+            <h4 style="color: #1F776A; margin-top: 20px;">{{$sekolah->nama_sekolah}}</h4>
 
             <div class="jumbotron pt-2">
               <div class="row slider mx-1">
                 {{-- Mulai Perulangan Slider --}}
-                @foreach($siswas as $siswa)
+                @foreach($siswas->sortBy('nama_siswa') as $siswa)
 
                 <div class="col-md-2">
                   <img src="{{asset('image')}}/{{$siswa->image}}" width="180" height="190" style="border: 2px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
